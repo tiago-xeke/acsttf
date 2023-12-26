@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Fiso</title>
+</head>
+<body>
+	<button onclick="openFile()">Abrir arquivo</button>
+	<button onclick="openFiles()">Abrir arquivos</button>
+	<button onclick="openFolder()">Abrir pasta</button>
+	<script src="script.js"></script>
+	<script>
+		var teste = new Fiso();
+		var file;
+
+		function openFile(){
+			teste.openFile().then(function(result){
+				console.log(result);
+			});
+		}
+
+		function openFiles(){
+			teste.openFile({multiple:true}).then(function(result){
+				console.log(result);
+			});
+		}
+
+		function openFolder(){
+			teste.openFolder().then(function(result){
+				console.log(result);
+			});
+		}
+	</script>
+</body>
+</html>

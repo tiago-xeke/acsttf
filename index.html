@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Test Font</title>
+</head>
+<body>
+	<button onclick="openFile()">Open file</button>
+	<script src="Fiso/script.js"></script>
+	<script>
+		var fs = new Fiso();
+
+		function workIt(buffer){
+		    const arrayBuffer = buffer;
+	        const dataView = new DataView(arrayBuffer);
+
+	        const sfntVersion = dataView.getInt32(0);
+	        const numTables = dataView.getUint16(4);
+
+	        console.log('SFNT Version:', sfntVersion);
+	        console.log('Number of Tables:', numTables);
+
+	        // Tag da tabela (4 bytes), Checksum (4 bytes), Offset (4 bytes), Length (4 bytes)
+	        let offset = 12; // O índice da tabela começa no offset 12
+
+	        for (let i = 0; i < numTables; i++) {
+	            //const tag = readTag(dataView, offset);
+	            const checksum = dataView.getUint32(offset + 4);
+	            const tableOffset = dataView.getUint32(offset + 8);
+	            const length = dataView.getUint32(offset + 12);
+
+	            console.log(`Checksum: ${checksum}, Offset: ${tableOffset}, Length: ${length}`);
+
+	            offset += 16; // Avança para a próxima entrada do índice da tabela
+	        }
+		}
+
+		function openFile(){
+			fs.openFile().then(function(file){
+				file.read().then(function(data){
+					console.log(workIt(data))
+				})
+			})
+		}
+	</script>
+</body>
+</html>

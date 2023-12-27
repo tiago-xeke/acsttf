@@ -15,8 +15,8 @@
 		    const arrayBuffer = buffer;
 	        const dataView = new DataView(arrayBuffer);
 
-	        const sfntVersion = dataView.getInt32(0);
-	        const numTables = dataView.getUint16(4);
+	        var sfntVersion = dataView.getUint32(0,false).toString(16);
+	        const numTables = dataView.getUint16(4,false);
 
 	        console.log('SFNT Version:', sfntVersion);
 	        console.log('Number of Tables:', numTables);
@@ -25,12 +25,15 @@
 	        let offset = 12; // O índice da tabela começa no offset 12
 
 	        for (let i = 0; i < numTables; i++) {
-	            //const tag = readTag(dataView, offset);
+	            let tag = '';
+        for (let j = 0; j < 4; j++) {
+        	tag += String.fromCharCode(dataView.getUint8(offset + j));
+        }
 	            const checksum = dataView.getUint32(offset + 4);
 	            const tableOffset = dataView.getUint32(offset + 8);
 	            const length = dataView.getUint32(offset + 12);
 
-	            console.log(`Checksum: ${checksum}, Offset: ${tableOffset}, Length: ${length}`);
+	            console.log(`Tag: ${tag}, Checksum: ${checksum}, Offset: ${tableOffset}, Length: ${length}`);
 
 	            offset += 16; // Avança para a próxima entrada do índice da tabela
 	        }

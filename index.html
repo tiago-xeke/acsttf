@@ -11,31 +11,48 @@
 	<script>
 		var fs = new Fiso();
 
-		function workIt(buffer){
-		    const arrayBuffer = buffer;
-	        const dataView = new DataView(arrayBuffer);
+		function readASCII(dataview,offset){
+			var result = "";
 
-	        var sfntVersion = dataView.getUint32(0,false).toString(16);
-	        const numTables = dataView.getUint16(4,false);
+			for(var i = 0;i < 4;i++){
+	        	result += String.fromCharCode(dataview.getUint8(offset + i));
+	        }
 
-	        console.log('SFNT Version:', sfntVersion);
-	        console.log('Number of Tables:', numTables);
+	        return result;
+		}
 
-	        // Tag da tabela (4 bytes), Checksum (4 bytes), Offset (4 bytes), Length (4 bytes)
-	        let offset = 12; // O índice da tabela começa no offset 12
+		function workIt(arrayBuffer){
+		    var dataView = new DataView(arrayBuffer);
 
-	        for (let i = 0; i < numTables; i++) {
-	            let tag = '';
-        for (let j = 0; j < 4; j++) {
-        	tag += String.fromCharCode(dataView.getUint8(offset + j));
-        }
-	            const checksum = dataView.getUint32(offset + 4);
-	            const tableOffset = dataView.getUint32(offset + 8);
-	            const length = dataView.getUint32(offset + 12);
+	        var sfntVersion = dataView.getUint32(0).toString(16);
+	        var numTables = dataView.getUint16(4);
 
-	            console.log(`Tag: ${tag}, Checksum: ${checksum}, Offset: ${tableOffset}, Length: ${length}`);
+	        console.log("SFNT Version:",sfntVersion);
+	        console.log("Number of Tables:",numTables);
 
-	            offset += 16; // Avança para a próxima entrada do índice da tabela
+	        var offset = 12;
+
+	        for(var i = 0;i < numTables;i++){
+	            var tag = readASCII(dataView,offset);
+
+	            var checksum = dataView.getUint32(offset + 4);
+	            var tableOffset = dataView.getUint32(offset + 8);
+	            var length = dataView.getUint32(offset + 12);
+
+	            // console.log(`
+	            // 	Tag: ${tag}
+	            // 	Checksum: ${checksum}
+	            // 	Offset: ${tableOffset}
+	            // 	Length: ${length}
+	            // `);
+
+	            if(tag === 'glyf'){
+	            	for(var j = 0;j < dataView.getUint16(tableOffset + 14);j++){
+			            console.log(dataView.getUint8(tableOffset + 16 + j));
+			        }
+	            }
+
+	            offset += 16;
 	        }
 		}
 

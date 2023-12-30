@@ -92,3 +92,15 @@ O diretório da tabela suscede a subtabela de deslocamento. As entradas no diret
 |uint32|length  |comprimento desta tabela em bytes (comprimento real não preenchido)|
 
 O diretório da tabela inclui **checkSum**, um número que pode ser usado para verificar a integridade dos dados da tabela. Os checkSum's são a soma não assinada dos comprimentos em uma tabela.
+
+## Tabela 'glyf'
+
+A tabela 'glyf' define a aparência dos glifos. Isso inclui a especificação dos pontos que descrevem os contornos que compõem um glifo e as instruções que se ajustam à grade desse glifo. A tabela 'glyf' suporta a definição de glifos simples e glifos compostos, ou seja, glifos compostos de outros glifos.
+
+O número de glifos na fonte é restrito apenas pelo valor indicado na tabela 'head'. A ordem em que os glifos são colocados em uma fonte é arbitrária.
+
+### Dados de glifo
+
+A Tabela a seguir documenta o formato das definições de glifos. Um número zero ou positivo de contornos sinaliza um glifo simples. Se o número de contornos for menor que zero, o glifo será composto de componentes. Se um glifo tiver contorno zero, ele não precisará ter nenhum dado de glifo. Caso o glifo seja composto por componentes, recomenda-se que o valor -1 seja utilizado neste campo.
+
+Os valores mínimo e máximo de x e y para os dados de coordenadas no glifo seguem e juntos definem a caixa delimitadora do glifo. Esta é a caixa delimitadora do contorno do glifo original antes de qualquer ajuste de grade ocorrer.
